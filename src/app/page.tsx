@@ -1,101 +1,158 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
+import { useState, useMemo } from "react"
+import Link from "next/link"
+import { Search, Users, Calendar, User } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { members, getLastPaymentMonth, getTotalDue } from "@/lib/data"
+import { AddMemberModal, type NewMemberData } from "@/components/add-member-modal"
+import { Button } from "@/components/ui/button"
+
+export default function Dashboard() {
+  const [searchTerm, setSearchTerm] = useState("")
+  const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false)
+
+  const filteredMembers = useMemo(() => {
+    return members.filter(
+      (member) =>
+        member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        member.id.toLowerCase().includes(searchTerm.toLowerCase()),
+    )
+  }, [searchTerm])
+
+  const handleAddMember = (memberData: NewMemberData) => {
+    const newMemberId = `M${String(members.length + 1).padStart(3, "0")}`
+    const newMember = {
+      id: newMemberId,
+      ...memberData,
+      membershipStartDate: memberData.membershipStartDate || new Date().toISOString().split("T")[0],
+    }
+
+    // Add to members array (in a real app, this would be an API call)
+    members.push(newMember)
+    setIsAddMemberModalOpen(false)
+  }
+
+  const totalMembers = members.length
+  const activeMembers = members.filter((m) => m.status === "Active").length
+  // const totalOutstanding = members.reduce((sum, member) => sum + getTotalDue(member.id), 0)
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto p-4 md:p-6">
+        {/* Header */}
+        <div className="flex md:flex-row flex-col items-start gap-4 md:items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Member Management Dashboard</h1>
+            <p className="text-muted-foreground md:block hidden">Manage member payments and track Qurbani distribution</p>
+          </div>
+          <Button onClick={() => setIsAddMemberModalOpen(true)} className="flex items-center gap-2">
+            <User className="h-4 w-4" />
+            Add Member
+          </Button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Stats Cards */}
+        <div className="grid gap-4 md:grid-cols-3 mb-8">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Members</CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{totalMembers}</div>
+              <p className="text-xs text-muted-foreground">{activeMembers} active members</p>
+            </CardContent>
+          </Card>
+          {/* <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Outstanding Amount</CardTitle>
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">${totalOutstanding}</div>
+              <p className="text-xs text-muted-foreground">Across all members</p>
+            </CardContent>
+          </Card> */}
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">This Month</CardTitle>
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+              </div>
+              <p className="text-xs text-muted-foreground">Current billing period</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Search Bar */}
+        <div className="mb-6">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input
+              placeholder="Search by name or member ID..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 py-4"
+            />
+          </div>
+        </div>
+
+        {/* Members List */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Members List</CardTitle>
+            <CardDescription>
+              {filteredMembers.length} of {totalMembers} members
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="px-2">
+            <div className="space-y-4 ">
+              {filteredMembers.map((member) => {
+                const lastPayment = getLastPaymentMonth(member.id)
+                const totalDue = getTotalDue(member.id)
+
+                return (
+                 <div key={member.id} className="relative" >
+                   <Link href={`/member/${member.id}`}>
+                    <div className="flex items-end md:items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer">
+                      <div className="flex-1 ">
+                        <div className="flex md:justify-start justify-between items-center gap-3 mb-2">
+                          <h3 className="font-semibold">{member.name}</h3>
+                          <Badge className="md:relative absolute top-2 right-2" variant={member.status === "Active" ? "default" : "secondary"}>{member.status}</Badge>
+                        </div>
+                        <div className="flex items-center gap-6 text-sm text-muted-foreground">
+                          <span>ID: {member.id}</span> <br />
+                          <span>Last Payment: {lastPayment || "Never"}</span>
+                        </div>
+                      </div>
+                      <div className="text-right   flex-col flex justify-end items-end">
+                        <div className="text-lg font-semibold">${totalDue}</div>
+                        <div className="text-sm text-muted-foreground">Total Due</div>
+                      </div>
+                    </div>
+                  </Link>
+                 </div>
+                )
+              })}
+
+              {filteredMembers.length === 0 && (
+                <div className="text-center py-8 text-muted-foreground">No members found matching your search.</div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+        <AddMemberModal
+          isOpen={isAddMemberModalOpen}
+          onClose={() => setIsAddMemberModalOpen(false)}
+          onSubmit={handleAddMember}
+        />
+      </div>
     </div>
-  );
+  )
 }
