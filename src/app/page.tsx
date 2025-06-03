@@ -122,9 +122,9 @@ export default function Dashboard() {
                    <Link href={`/member/${member.id}`}>
                     <div className="flex items-end md:items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer">
                       <div className="flex-1 ">
-                        <div className="flex md:justify-start justify-between items-center gap-3 mb-2">
+                        <div className="flex md:justify-start justify-between items-center gap-4 mb-2">
                           <h3 className="font-semibold">{member.name}</h3>
-                          <Badge className="md:relative absolute top-2 right-2" variant={member.status === "Active" ? "default" : "secondary"}>{member.status}</Badge>
+                          <Badge className="md:relative md:block rounded-full  absolute md:top-0 md:right-0 top-2 right-2" variant={member.status === "Active" ? "default" : "secondary"}>{member.status}</Badge>
                         </div>
                         <div className="flex items-center gap-6 text-sm text-muted-foreground">
                           <span>ID: {member.id}</span> <br />
