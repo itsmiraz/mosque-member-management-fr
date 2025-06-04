@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react"
 import Link from "next/link"
-import { Search, Users, Calendar, User } from "lucide-react"
+import { Search, Users, Calendar, User, Beef, Receipt } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -43,15 +43,36 @@ export default function Dashboard() {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto p-4 md:p-6">
         {/* Header */}
-        <div className="flex md:flex-row flex-col items-start gap-4 md:items-center justify-between mb-8">
+      {/* Header */}
+        <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Member Management Dashboard</h1>
-            <p className="text-muted-foreground md:block hidden">Manage member payments and track Qurbani distribution</p>
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Member Management Dashboard</h1>
+            <p className="text-muted-foreground md:block hidden text-sm md:text-base">
+              Manage member payments and track Qurbani distribution
+            </p>
           </div>
-          <Button onClick={() => setIsAddMemberModalOpen(true)} className="flex items-center gap-2">
-            <User className="h-4 w-4" />
-            Add Member
-          </Button>
+          <div className="flex gap-2">
+            {/* Desktop Navigation - Hidden on mobile */}
+            <div className="hidden md:flex gap-2">
+              <Link href="/transactions">
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Receipt className="h-4 w-4" />
+                  Transactions
+                </Button>
+              </Link>
+              <Link href="/meat-distribution">
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Beef className="h-4 w-4" />
+                  Meat Distribution
+                </Button>
+              </Link>
+            </div>
+            <Button onClick={() => setIsAddMemberModalOpen(true)} className="flex items-center gap-2">
+              <User className="h-4 w-4" />
+              <span className="hidden sm:inline">Add Member</span>
+              <span className="sm:hidden">Add</span>
+            </Button>
+          </div>
         </div>
 
         {/* Stats Cards */}
