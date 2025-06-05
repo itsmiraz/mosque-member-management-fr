@@ -76,7 +76,7 @@ export default function MeatDistribution() {
       <div className="container mx-auto p-6">
         {/* Header */}
         <div className="mb-8">
-          <Link href="/">
+          <Link href="/" className="md:block hidden">
             <Button variant="ghost" className="mb-4">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Dashboard
