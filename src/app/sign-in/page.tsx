@@ -16,6 +16,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useLoginMutation } from "@/redux/feature/auth/authApi";
+import { VerifyToken } from "@/utils/verifyToken";
+import { useAppDispatch } from "@/redux/hooks/hooks";
+import { setUser } from "@/redux/feature/auth/authSlice";
+import toast from "react-hot-toast";
 
 export default function SignIn() {
   const router = useRouter();
@@ -23,6 +28,9 @@ export default function SignIn() {
     email: "",
     password: "",
   });
+  const dispatch = useAppDispatch();
+
+  const [login] = useLoginMutation();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{
@@ -72,32 +80,30 @@ export default function SignIn() {
     }
 
     setIsLoading(true);
-
     try {
-      // Simulate API call
-      await new Promise((resolve, reject) => {
-        setTimeout(() => {
-          // Simple demo authentication
-          if (
-            formData.email === "admin@example.com" &&
-            formData.password === "password"
-          ) {
-            resolve(true);
-          } else {
-            reject(new Error("Invalid credentials"));
-          }
-        }, 1500);
-      });
-
-      // Success - redirect to dashboard
+      const payload = {
+        email: formData.email,
+        password: formData.password,
+      };
+      const res = await login(payload).unwrap();
+      console.log(res);
+      const user = VerifyToken(res?.data?.accessToken);
+      dispatch(setUser({ user: user, token: res?.data?.accessToken }));
+      toast.success("Successfully Logged In");
       router.push("/");
-    } catch (error: any) {
-      console.log(error);
-      setErrors({
-        general: "Invalid email or password. Please try again.",
-      });
-    } finally {
+    } catch (err) {
       setIsLoading(false);
+
+      const error = err as { data?: { errorSource?: { message: string }[] } };
+
+      if (error?.data) {
+        error?.data?.errorSource?.forEach((item) => {
+          toast(item.message || "Something Went Wrong");
+          // setErrors(item.message);
+        });
+      }
+
+      console.log(err);
     }
   };
 

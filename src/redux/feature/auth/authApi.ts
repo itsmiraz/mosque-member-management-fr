@@ -18,7 +18,7 @@ const authApi = baseApi.injectEndpoints({
     }),
     login: builder.mutation({
       query: (payload) => ({
-        url: "/auth/login-with-email",
+        url: "/auth/admin/login",
         method: "POST",
         body: payload,
       }),

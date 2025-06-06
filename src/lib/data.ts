@@ -135,59 +135,59 @@ export function getPaymentStatus(memberId: string, year: number, month: number) 
   }
 }
 
-export function getLastPaymentMonth(memberId: string): string | null {
-  const memberPayments = payments
-    .filter((p) => p.memberId === memberId)
-    .sort((a, b) => {
-      if (a.year !== b.year) return b.year - a.year
-      return b.month - a.month
-    })
+// export function getLastPaymentMonth(memberId: string): string | null {
+//   const memberPayments = payments
+//     .filter((p) => p.memberId === memberId)
+//     .sort((a, b) => {
+//       if (a.year !== b.year) return b.year - a.year
+//       return b.month - a.month
+//     })
 
-  if (memberPayments.length === 0) return null
+//   if (memberPayments.length === 0) return null
 
-  const lastPayment = memberPayments[0]
-  const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ]
+//   const lastPayment = memberPayments[0]
+//   const monthNames = [
+//     "January",
+//     "February",
+//     "March",
+//     "April",
+//     "May",
+//     "June",
+//     "July",
+//     "August",
+//     "September",
+//     "October",
+//     "November",
+//     "December",
+//   ]
 
-  return `${monthNames[lastPayment.month - 1]} ${lastPayment.year}`
-}
+//   return `${monthNames[lastPayment.month - 1]} ${lastPayment.year}`
+// }
 
-export function getTotalDue(memberId: string): number {
-  const currentYear = new Date().getFullYear()
-  const currentMonth = new Date().getMonth() + 1
+// export function getTotalDue(memberId: string): number {
+//   const currentYear = new Date().getFullYear()
+//   const currentMonth = new Date().getMonth() + 1
 
-  let unpaidMonths = 0
+//   let unpaidMonths = 0
 
-  // Count unpaid months for current year up to current month
-  for (let month = 1; month <= currentMonth; month++) {
-    const status = getPaymentStatus(memberId, currentYear, month)
-    if (!status.paid) {
-      unpaidMonths++
-    }
-  }
+//   // Count unpaid months for current year up to current month
+//   for (let month = 1; month <= currentMonth; month++) {
+//     const status = getPaymentStatus(memberId, currentYear, month)
+//     if (!status.paid) {
+//       unpaidMonths++
+//     }
+//   }
 
-  // Count unpaid months for previous year
-  for (let month = 1; month <= 12; month++) {
-    const status = getPaymentStatus(memberId, currentYear - 1, month)
-    if (!status.paid) {
-      unpaidMonths++
-    }
-  }
+//   // Count unpaid months for previous year
+//   for (let month = 1; month <= 12; month++) {
+//     const status = getPaymentStatus(memberId, currentYear - 1, month)
+//     if (!status.paid) {
+//       unpaidMonths++
+//     }
+//   }
 
-  return unpaidMonths * MONTHLY_FEE
-}
+//   return unpaidMonths * MONTHLY_FEE
+// }
 
 export function updatePayments(memberId: string, year: number, selectedMonths: string[], paymentMethod: string) {
   const monthNames = [
