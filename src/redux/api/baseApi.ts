@@ -9,11 +9,11 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
 import { logOut, setUser } from "../feature/auth/authSlice";
-const env = process.env.NODE_ENV;
-const baseUrl =
-  env === "development"
-    ? process.env.NEXT_PUBLIC_API_BASE_URL_DEV
-    : process.env.NEXT_PUBLIC_API_BASE_URL_PROD;
+// const env = process.env.NODE_ENV;
+const baseUrl ='https://mosqe-backend.vercel.app/api'
+  // env === "development"
+  //   ? process.env.NEXT_PUBLIC_API_BASE_URL_DEV
+  //   : process.env.NEXT_PUBLIC_API_BASE_URL_PROD;
 const baseQuery = fetchBaseQuery({
   baseUrl: baseUrl,
   credentials: "include",
