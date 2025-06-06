@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import Link from "next/link";
 import { Search, Users, Calendar, User, Beef, Receipt } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -29,33 +29,19 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { MemberListSkeleton } from "@/components/member-card-skeleton";
 import { handleApiRequest } from "@/utils/handleApiRequest";
 import toast from "react-hot-toast";
-
-// Custom hook for debounced search
-const useDebounce = (value: string, delay: number) => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-};
+import Pagination from "@/components/pagination";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false);
+  const [page, setPage] = useState(1);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 800);
   const { data, isLoading, isFetching, isError } = useGetAllMembersQuery([
     {
       name: "page",
-      value: 1,
+      value: page,
     },
     {
       name: "limit",
@@ -157,9 +143,9 @@ export default function Dashboard() {
                 </>
               ) : (
                 <>
-                  <div className="text-2xl font-bold">{members?.length}</div>
+                  <div className="text-2xl font-bold">{membersMeta?.totalMembers}</div>
                   <p className="text-xs text-muted-foreground">
-                    {members?.length} active members
+                    {membersMeta?.totalMembers} active members
                   </p>
                 </>
               )}
@@ -249,7 +235,7 @@ export default function Dashboard() {
                             <div className="flex md:justify-start justify-between items-center gap-4 mb-2">
                               <h3 className="font-semibold">{member.name}</h3>
                               <Badge
-                                className="md:relative md:block rounded-full  absolute md:top-0 md:right-0 top-2 right-2"
+                                className="md:relative md:block rounded-full capitalize  absolute md:top-0 md:right-0 top-2 right-2"
                                 variant={
                                   member.status === "active"
                                     ? "default"
@@ -289,6 +275,12 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         )}
+
+        <Pagination
+          setPage={setPage}
+          totalPages={membersMeta?.totalPages}
+          currentPage={page}
+        ></Pagination>
         <AddMemberModal
           isOpen={isAddMemberModalOpen}
           onClose={() => setIsAddMemberModalOpen(false)}

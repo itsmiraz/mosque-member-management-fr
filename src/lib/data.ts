@@ -119,7 +119,7 @@ export const meatTaken: Record<string, Record<string, boolean>> = {
   M005: { "2024": false },
 }
 
-const MONTHLY_FEE = 50
+// const MONTHLY_FEE = 50
 
 export function getMemberById(id: string): Member | undefined {
   return members.find((member) => member.id === id)

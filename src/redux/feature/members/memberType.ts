@@ -5,7 +5,7 @@ export type TPayment = {
 };
 
 export type TMember = {
-  _id: string;
+  _id?: string;
   name: string;
   name_in_bengali: string;
   memberId: string;

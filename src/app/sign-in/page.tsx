@@ -203,21 +203,7 @@ export default function SignIn() {
                 )}
               </Button>
             </form>
-
-            {/* Demo Credentials */}
-            <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md">
-              <h3 className="text-sm font-medium text-blue-800 mb-2">
-                Demo Credentials
-              </h3>
-              <div className="text-sm text-blue-700 space-y-1">
-                <div>
-                  <strong>Email:</strong> admin@example.com
-                </div>
-                <div>
-                  <strong>Password:</strong> password
-                </div>
-              </div>
-            </div>
+        
           </CardContent>
         </Card>
       </div>

@@ -10,6 +10,7 @@ import {
   MapPin,
   User,
   Beef,
+  Edit,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -37,6 +38,8 @@ import {
 import { useGetSingleMemberQuery } from "@/redux/feature/members/membersApi";
 import { TMember } from "@/redux/feature/members/memberType";
 import { getTotalDue } from "@/utils/getTotalDue";
+import { UpdateMemberModal } from "@/components/update-member-modal";
+import { MemberDetailsPageSkeleton } from "@/components/member-details-skeleton";
 
 const months = [
   "January",
@@ -60,15 +63,20 @@ export default function MemberDetails({ params }: { params: { id: string } }) {
   const { id } = params;
   const [selectedYear, setSelectedYear] = useState(currentYear.toString());
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-
+ const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false)
   // const member = getMemberById(id)
   const { data ,isLoading} = useGetSingleMemberQuery(id as string, { skip: !id });
   const member: TMember = data?.data;
  
- if(isLoading){
-  return 'Loading'
- }
-  if (!isLoading && !member) {
+  const handleUpdateMember=()=>{
+
+  }
+  // Show skeleton while loading
+  if (isLoading) {
+    return <MemberDetailsPageSkeleton />
+  }
+ 
+  if (!member) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
@@ -133,12 +141,20 @@ export default function MemberDetails({ params }: { params: { id: string } }) {
                 Member ID: {member.memberId}
               </p>
             </div>
-            <Badge
-              variant={member.status === "active" ? "default" : "secondary"}
-              className="text-sm"
-            >
-              {member.status}
-            </Badge>
+               <div className="flex items-center gap-2">
+              <Badge variant={member?.status === "active" ? "default" : "secondary"} className="text-sm">
+                {member?.status}
+              </Badge>
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-2"
+                onClick={() => setIsUpdateModalOpen(true)}
+              >
+                <Edit className="h-4 w-4" />
+                Edit
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -339,6 +355,12 @@ export default function MemberDetails({ params }: { params: { id: string } }) {
           unpaidMonths={getUnpaidMonths()}
           year={selectedYear}
           memberName={member.name}
+        />
+           <UpdateMemberModal
+          isOpen={isUpdateModalOpen}
+          onClose={() => setIsUpdateModalOpen(false)}
+          onSubmit={handleUpdateMember}
+          member={member}
         />
       </div>
     </div>

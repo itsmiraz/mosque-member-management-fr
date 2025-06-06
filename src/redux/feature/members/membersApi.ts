@@ -12,13 +12,14 @@ const memberApi = baseApi.injectEndpoints({
         method: "POST",
         body: payload,
       }),
-      invalidatesTags:['member']
+      invalidatesTags:['members']
     }),
     getSingleMember: builder.query({
       query: (memberId) => ({
         url: `/member/${memberId}`,
         method: "GET",
       }),
+      providesTags:['member']
     }),
     // Get all members
     getAllMembers: builder.query({
@@ -45,7 +46,7 @@ const memberApi = baseApi.injectEndpoints({
           params,
         };
       },
-      providesTags:['member']
+      providesTags:['members']
     }),
 
     // Get members by meat status
@@ -73,6 +74,7 @@ const memberApi = baseApi.injectEndpoints({
           params,
         };
       },
+      providesTags:["meatStatus"]
     }),
 
     // Mark meat taken
@@ -82,6 +84,16 @@ const memberApi = baseApi.injectEndpoints({
         method: "POST",
         body: payload,
       }),
+      invalidatesTags:["meatStatus","member"]
+    }),
+    // Mark meat taken
+    markAsNotTakenMeat: builder.mutation({
+      query: (payload) => ({
+        url: "/member/un-taken-meat",
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags:["meatStatus","member"]
     }),
 
     // Pay membership fee
@@ -101,5 +113,6 @@ export const {
   useGetMembersByMeatStatusQuery,
   useMarkMeatTakenMutation,
   usePayMembershipFeeMutation,
-  useGetSingleMemberQuery
+  useGetSingleMemberQuery,
+  useMarkAsNotTakenMeatMutation
 } = memberApi;
