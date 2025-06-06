@@ -13,7 +13,6 @@ const env = process.env.NODE_ENV;
 const baseUrl =
   env === "development"
     ? process.env.NEXT_PUBLIC_API_BASE_URL_DEV
-    
     : process.env.NEXT_PUBLIC_API_BASE_URL_PROD;
 const baseQuery = fetchBaseQuery({
   baseUrl: baseUrl,
@@ -62,31 +61,6 @@ const baseQueryWithRefreshToken: BaseQueryFn<
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: baseQueryWithRefreshToken,
-  tagTypes: [
-    "videoScript",
-    "videoSetup",
-    "actorSelection",
-    "User",
-    "requestedActor",
-    "video-editing",
-    "Order",
-    "OrderDetails",
-    "BillingInvoices",
-    "rawFootage",
-    "Notifications",
-    "Template",
-    "orderVideoStatus",
-    "ProductShipping",
-    "shootSchedule",
-    "actorSelectionData",
-    "background",
-    "creatorCanvasRelevantActors",
-    "creatorCanvasInvitedActors",
-    "creatorCanvasAppliedActors",
-    "creatorCanvasSavedActors",
-    "reviewRating",
-    "PurchaseCreditAmount"
-
-  ],
+  tagTypes: ["videoScript", "videoSetup", "actorSelection", "User", "member"],
   endpoints: () => ({}),
 });

@@ -62,9 +62,13 @@ export default function MemberDetails({ params }: { params: { id: string } }) {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   // const member = getMemberById(id)
-  const { data } = useGetSingleMemberQuery(id as string, { skip: !id });
+  const { data ,isLoading} = useGetSingleMemberQuery(id as string, { skip: !id });
   const member: TMember = data?.data;
-  if (!member) {
+ 
+ if(isLoading){
+  return 'Loading'
+ }
+  if (!isLoading && !member) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
@@ -79,7 +83,7 @@ export default function MemberDetails({ params }: { params: { id: string } }) {
 
   const totalDue = getTotalDue(member);
 
-  const isMeatTaken = member.meatTaken?.[selectedYear] || false;
+  const isMeatTaken = member?.meatTaken?.[selectedYear] || false;
 
   const handlePaymentSubmit = (
     selectedMonths: string[],

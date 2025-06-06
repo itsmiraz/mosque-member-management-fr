@@ -12,6 +12,7 @@ const memberApi = baseApi.injectEndpoints({
         method: "POST",
         body: payload,
       }),
+      invalidatesTags:['member']
     }),
     getSingleMember: builder.query({
       query: (memberId) => ({
@@ -44,6 +45,7 @@ const memberApi = baseApi.injectEndpoints({
           params,
         };
       },
+      providesTags:['member']
     }),
 
     // Get members by meat status
