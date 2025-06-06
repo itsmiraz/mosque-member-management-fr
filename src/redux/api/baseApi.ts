@@ -10,6 +10,7 @@ import {
 import { RootState } from "../store";
 import { logOut, setUser } from "../feature/auth/authSlice";
 // const env = process.env.NODE_ENV;
+//'https://mosqe-backend.vercel.app/api'
 const baseUrl ='https://mosqe-backend.vercel.app/api'
   // env === "development"
   //   ? process.env.NEXT_PUBLIC_API_BASE_URL_DEV

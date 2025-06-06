@@ -9,6 +9,8 @@ import {
   CheckCircle,
   XCircle,
   Calendar,
+  Cross,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -92,6 +94,7 @@ export default function MeatDistribution() {
   //   meatNotTakenCount,
   const membersMeta: {
     total: number;
+    totalMembers: number;
     page: number;
     limit: number;
     year: number;
@@ -171,8 +174,8 @@ export default function MeatDistribution() {
   console.log(members);
   // const stats = getStats()
   const progressPercentage =
-    membersMeta?.total > 0
-      ? Math.round((membersMeta?.meatTakenCount / membersMeta?.total) * 100)
+    membersMeta?.totalMembers > 0
+      ? Math.round((membersMeta?.meatTakenCount / membersMeta?.totalMembers) * 100)
       : 0;
  
   if (isError) {
@@ -233,7 +236,7 @@ export default function MeatDistribution() {
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{membersMeta?.total}</div>
+              <div className="text-2xl font-bold">{membersMeta?.totalMembers}</div>
               <p className="text-xs text-muted-foreground">
                 Active and inactive
               </p>
@@ -276,7 +279,7 @@ export default function MeatDistribution() {
               ) : (
                 <>
                   <div className="text-2xl font-bold text-red-600">
-                    {membersMeta?.meatNotTakenCount}
+                    {membersMeta?.totalMembers - membersMeta?.meatTakenCount}
                   </div>
                   <p className="text-xs text-muted-foreground">
                     Pending distribution
@@ -311,13 +314,16 @@ export default function MeatDistribution() {
         </div>
 
         {/* Search Bar */}
-        <div className="mb-6">
+        <div className="mb-6 max-w-md relative">
           <Input
             placeholder="Search members by name or ID..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="max-w-md"
           />
+          {
+            searchTerm && <button className="absolute right-2 top-1" onClick={()=>setSearchTerm('')}><X/></button>
+          }
         </div>
 
         {/* Members Grid */}
